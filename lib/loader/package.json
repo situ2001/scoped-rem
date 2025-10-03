@@ -1,0 +1,38 @@
+{
+  "name": "scoped-rem-loader",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest"
+  },
+  "engines": {},
+  "keywords": [],
+  "author": "situ2001 <yongcong2001@outlook.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/situ2001/scoped-rem.git"
+  },
+  "homepage": "https://github.com/situ2001/scoped-rem#readme",
+  "bugs": {
+    "url": "https://github.com/situ2001/scoped-rem/issues"
+  },
+  "packageManager": "pnpm@10.16.1",
+  "devDependencies": {},
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
