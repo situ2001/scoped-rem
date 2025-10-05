@@ -1,7 +1,7 @@
 {
   "name": "scoped-rem",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Transform CSS `rem` to scoped values using CSS variables",
   "type": "module",
   "files": [
     "dist",
