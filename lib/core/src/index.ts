@@ -33,8 +33,6 @@ export interface ScopedRemOptions {
 
   /**
    * Number of decimal places to round the converted rem values, default is no rounding.
-   * 
-   * Default is 4.
    */
   precision?: number;
 }
@@ -62,7 +60,7 @@ export function parseQueryOptions(query: string): ScopedRemOptions | null {
     options.varselector = varselector;
   }
 
-  const precisionStr = params.get('precision') || PRECISION_DEFAULT.toString();
+  const precisionStr = params.get('precision');
   if (precisionStr) {
     options.precision = parseInt(precisionStr, 10);
   }
@@ -72,7 +70,6 @@ export function parseQueryOptions(query: string): ScopedRemOptions | null {
 
 export const VARNAME_DEFAULT = '--rem-relative-base';
 export const VARSELECTOR_DEFAULT = ':root';
-export const PRECISION_DEFAULT = 4;
 
 function generateCssVarDeclaration(options: ScopedRemOptions): string {
   const { rootval } = options;
@@ -125,9 +122,11 @@ function transformRemWithPostCSS(
                   );
                 }
 
-                return parseFloat(parseFloat(numStr).toFixed(options.precision));
+                return parseFloat(
+                  (parseFloat(numStr) || 0).toFixed(options.precision)
+                );
               } else {
-                return parseFloat(parseFloat(numStr).toFixed(PRECISION_DEFAULT));
+                return parseFloat(numStr) || 0;
               }
             })();
 
