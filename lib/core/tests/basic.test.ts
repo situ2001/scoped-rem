@@ -26,7 +26,7 @@ test('should still transform rem to calc() even if rootval is not provided', () 
   const input = `.foo { width: 1.2rem; }`.trim();
 
   const result = transformCss(input, 'test.css', {
-    varname: '--my-base',
+    varname: 'my-base',
   });
 
   expect(result).toContain('calc(1.2 * var(--my-base))');
@@ -43,7 +43,7 @@ test('transformCss with custom varname and varselector', () => {
 
   const result = transformCss(input, 'test.css', {
     rootval: '10vw',
-    varname: '--my-base',
+    varname: 'my-base',
     varselector: '.my-component',
   });
 

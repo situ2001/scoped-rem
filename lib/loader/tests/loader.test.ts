@@ -173,7 +173,7 @@ describe('webpack integration tests', () => {
     const inputCss = `.component { font-size: 1.5rem; }`;
     const { jsFile, tempDir } = createTempFiles(
       inputCss,
-      '?rem-scoped&rootval=10vw&varname=--custom-base&varselector=.my-component'
+      '?rem-scoped&rootval=10vw&varname=custom-base&varselector=.my-component'
     );
 
     try {
@@ -184,6 +184,21 @@ describe('webpack integration tests', () => {
       expect(output).not.toContain('--rem-relative-base');
 
       expect(output).toContain('.my-component { --custom-base: 10vw');
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it('should not generate variable declaration if rootval is missing', async () => {
+    const inputCss = `.component { font-size: 2rem; }`;
+    const { jsFile, tempDir } = createTempFiles(inputCss, '?rem-scoped&varname=base-no-rootval');
+
+    try {
+      const { output } = await runWebpack(jsFile, loaderPath);
+
+      expect(output).toContain('calc(2 * var(--base-no-rootval))');
+      expect(output).not.toContain('--base-no-rootval:');
+      expect(output).not.toContain('{ --base-no-rootval:');
     } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }

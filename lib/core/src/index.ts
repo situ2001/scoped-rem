@@ -6,15 +6,15 @@ import { z } from 'zod';
  * Core idea of scoped-rem:
  * 1. Transform rem values `x rem` to `calc(x * var(--varname))`
  *    1. `x` is the original rem value
- *    2. `varname` is a CSS variable name
+ *    2. `varname` is a CSS variable name without `--` prefix, default `rem-relative-base`
  *    3. `x` will be rounded to a specified `precision` if provided
- * 2. (Optional if `rootval` is not provided) Declare the CSS variable `varname` in a specified scope `varselector` with a relative root value `rootval`
+ * 2. (Skipped if `rootval` is not provided) Declare the CSS variable `--varname` in a specified scope `varselector` with a relative root value `rootval`
  */
 export interface ScopedRemOptions {
   /** 
    * CSS variable name used for rem conversion, default '--rem-relative-base' 
    * 
-   * e.g., '--my-base', then rem value will be converted to 'calc(x * var(--my-base))'
+   * e.g., 'my-base', then rem value will be converted to 'calc(x * var(--my-base))'
    */
   varname?: string;
 
@@ -48,10 +48,13 @@ export interface ScopedRemOptions {
   precision?: number;
 }
 
+export const VARNAME_DEFAULT = 'rem-relative-base';
+export const VARSELECTOR_DEFAULT = ':root';
+
 const ScopedRemOptionsSchema: z.ZodType<ScopedRemOptions> = z.object({
-  varname: z.string().optional(),
+  varname: z.string().optional().default(VARNAME_DEFAULT),
   rootval: z.string().optional(),
-  varselector: z.string().optional(),
+  varselector: z.string().optional().default(VARSELECTOR_DEFAULT),
   precision: z.coerce.number().int().min(0).max(100).optional(),
 });
 
@@ -81,9 +84,6 @@ export function parseQueryOptions(query: string): ScopedRemOptions | null {
   }
 }
 
-export const VARNAME_DEFAULT = '--rem-relative-base';
-export const VARSELECTOR_DEFAULT = ':root';
-
 function generateCssVarDeclaration(options: ScopedRemOptions): string {
   const { rootval } = options;
 
@@ -95,7 +95,7 @@ function generateCssVarDeclaration(options: ScopedRemOptions): string {
   const varname = options.varname || VARNAME_DEFAULT;
   const scope = options.varselector || VARSELECTOR_DEFAULT;
 
-  return `${scope} { ${varname}: ${rootval}; }`;
+  return `${scope} { --${varname}: ${rootval}; }`;
 }
 
 // https://github.com/cuth/postcss-pxtorem/blob/239fc3a1ab3ecbc63d1b9f98dd380abd49c03309/lib/pixel-unit-regex.js#L9-L13
@@ -149,7 +149,7 @@ function transformRemWithPostCSS(
               return;
             }
 
-            node.value = `calc(${numValue} * var(${varname}))`;
+            node.value = `calc(${numValue} * var(--${varname}))`;
             modified = true;
           }
         });
