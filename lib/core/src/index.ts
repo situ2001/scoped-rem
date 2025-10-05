@@ -37,6 +37,7 @@ export interface ScopedRemOptions {
   precision?: number;
 }
 
+// TODO refactor using zod.
 export function parseQueryOptions(query: string): ScopedRemOptions | null {
   const params = new URLSearchParams(query);
   if (!params.has('rem-scoped')) {
