@@ -13,7 +13,8 @@ Here is the scenario from author's experience:
 - Here are two mobile applications called A and B, both using a WebView to render web content. And they are managed by different teams. Each team has its own design system and style guidelines.
 - Specifically, application B uses a base font size of `13.3333vw` and application A uses a different base font size of `26.6667vw`.
 - One day, the team managing application B decided to integrate some components from application A into their app. However, although both applications use `rem` units for styling, the components from application A did not scale correctly within application B because the `rem` units in application A were based on a different root font size than those in application B.
-- To maximize code reuse among applications, the team needed a way to make the `rem` units in the imported components from application A keep their original scaling behavior as if they still conformed to application A's root font size, even when rendered within application B, without any modification to the original CSS files.
+- Dev from application B are frustrated because they have to manually modify all related values in the CSS files of application A to make them work correctly within application B, which is time-consuming and error-prone. And if application A updates their components, the modifications need to be redone.
+- To maximize code reuse among applications, reduce development time and maintenance costs, the team needed a way to make the `rem` units in the imported components from application A keep their original scaling behavior as if they still conformed to application A's root font size, even when rendered within application B, without any modification to the original CSS files.
 
 That is why scoped-rem was created.
 
