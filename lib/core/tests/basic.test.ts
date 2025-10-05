@@ -14,8 +14,6 @@ test('transformCss basic - simple rem to calc', () => {
     rootval: '26.6667vw',
   });
 
-  console.log('Result:', result);
-
   // 应该包含变量声明
   expect(result).toContain(':root { --rem-relative-base: 26.6667vw; }');
 
@@ -39,8 +37,6 @@ test('transformCss with custom varname and scope', () => {
     scope: '.my-component',
   });
 
-  console.log('Result:', result);
-
   // 应该使用自定义变量名和作用域
   expect(result).toContain('.my-component { --my-base: 10vw; }');
   expect(result).toContain('calc(1.5 * var(--my-base))');
@@ -58,10 +54,7 @@ test('transformCss with precision', () => {
     precision: 2,
   });
 
-  console.log('Result:', result);
-
-  // 应该保留 2 位小数
-  // expect(result).toContain('calc(1.23 * var(--rem-relative-base))');
+  expect(result).toContain('calc(1.23 * var(--rem-relative-base))');
 });
 
 test('transformCss should not transform non-rem units', () => {
@@ -77,14 +70,10 @@ test('transformCss should not transform non-rem units', () => {
     rootval: '26.6667vw',
   });
 
-  console.log('Result:', result);
-
-  // 不应该转换其他单位
   expect(result).toContain('100px');
   expect(result).toContain('50%');
   expect(result).toContain('1em');
 
-  // 不应该包含这些单位的 calc
   expect(result).not.toContain('calc(100 * var');
   expect(result).not.toContain('calc(50 * var');
 });
@@ -169,4 +158,23 @@ test('nested rem values in functions', () => {
     expect(result).toContain('calc(50% + calc(10px + calc(1 * var(--rem-relative-base))))');
   }
 });
+test('transformCss should not transform rem in url()', () => {
+  const input = `
+.foo {
+  background: url(114514rem.png);
+  background-image: url("images/2rem-icon.svg");
+  background-image: url('images/3rem-icon.svg');
+}
+  `.trim();
 
+  const result = transformCss(input, 'test.css', {
+    rootval: '26.6667vw',
+  });
+
+  // url() 内容中的 rem 不应被转换
+  expect(result).toContain('url(114514rem.png)');
+  expect(result).toContain('url("images/2rem-icon.svg")');
+  expect(result).toContain("url('images/3rem-icon.svg')");
+  // 不应出现 calc 替换在 url() 内
+  expect(result).not.toMatch(/url\([^)]+calc\(/);
+});

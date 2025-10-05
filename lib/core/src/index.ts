@@ -5,8 +5,12 @@ import valueParser from 'postcss-value-parser';
  * 解析选项参数
  */
 export interface ScopedRemOptions {
-  /** rem 相对基准值，如 '26.6667vw' 或 '16px' */
-  rootval: string;
+  /** 
+   * Relative root value of rem, e.g., '26.6667vw'
+   *
+   * If not provided, the loader will skip rem value transformation, leaving rem units as-is.
+   */
+  rootval?: string;
   /** CSS 变量名，默认 '--rem-relative-base' */
   varname?: string;
   /** CSS 变量的作用域选择器，默认 ':root' */
@@ -27,9 +31,14 @@ export const SCOPE_DEFAULT = ':root';
  * // => ':root { --rem-relative-base: 26.6667vw; }'
  */
 function generateCssVarDeclaration(options: ScopedRemOptions): string {
+  const { rootval } = options;
+
+  if (!rootval) {
+    return '';
+  }
+
   const varname = options.varname || VARNAME_DEFAULT;
   const scope = options.scope || SCOPE_DEFAULT;
-  const { rootval } = options;
 
   return `${scope} { ${varname}: ${rootval}; }`;
 }
@@ -101,34 +110,23 @@ export function transformCss(
   const varDeclaration = generateCssVarDeclaration(options);
   const transformedCss = transformRemWithPostCSS(css, filename, options);
 
+  if (!varDeclaration) return transformedCss;
   return `${varDeclaration}\n${transformedCss}`;
 }
 
-/**
- * 从 query string 解析选项
- * @param query 查询字符串，如 'rem-scoped&rootval=26.6667vw&scope=.comp'
- * @returns 解析后的选项对象，如果不包含 rem-scoped 则返回 null
- */
 export function parseQueryOptions(query: string): ScopedRemOptions | null {
   const params = new URLSearchParams(query);
-
-  // 必须包含 rem-scoped 标记
   if (!params.has('rem-scoped')) {
     return null;
   }
 
-  // 必须提供 rootval
-  const rootval = params.get('rootval');
-  if (!rootval) {
-    throw new Error('[scoped-rem] Missing required parameter: rootval');
+  const options: ScopedRemOptions = {};
+
+  const rootvalValue = params.get('rootval');
+  if (rootvalValue) {
+    options.rootval = rootvalValue;
   }
 
-  const options: ScopedRemOptions = {
-    rootval,
-    debug: params.get('debug') === 'true',
-  };
-
-  // 只在有值时添加可选属性
   const varname = params.get('varname');
   if (varname) {
     options.varname = varname;

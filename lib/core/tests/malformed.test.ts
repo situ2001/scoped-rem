@@ -59,7 +59,8 @@ test('malformed - empty rootval', () => {
       rootval: '',
     })
   )
-    .toContain(SCOPE_DEFAULT); // TODO contains default varname
+    .not
+    .toContain('{ --rem-relative-base');
 });
 
 // test('malformed - missing rootval', () => {
