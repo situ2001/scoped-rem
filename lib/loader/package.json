@@ -1,6 +1,6 @@
 {
   "name": "scoped-rem-loader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Webpack loader of scoped-rem, a tool to transform rem length to scoped values using CSS variables",
   "type": "module",
   "files": [
