@@ -1,20 +1,30 @@
 import postcss from 'postcss';
 import valueParser from 'postcss-value-parser';
 
+/**
+ * Core idea of scoped-rem:
+ * 1. Transform rem values `x rem` to `calc(x * var(--varname))`
+ *    1. `x` is the original rem value
+ *    2. `varname` is a CSS variable name
+ *    3. `x` will be rounded to a specified `precision` if provided
+ * 2. (Optional if `rootval` is not provided) Declare the CSS variable `varname` in a specified scope `varselector` with a relative root value `rootval`
+ */
 export interface ScopedRemOptions {
-  /** 
-   * Relative root value of rem, e.g., '26.6667vw'
-   *
-   * If not provided, the loader will skip rem value transformation, leaving rem units as-is.
-   */
-  rootval?: string;
-
   /** 
    * CSS variable name used for rem conversion, default '--rem-relative-base' 
    * 
-   * e.g., '--my-base', then rem will be converted to 'calc(x * var(--my-base))'
+   * e.g., '--my-base', then rem value will be converted to 'calc(x * var(--my-base))'
    */
   varname?: string;
+
+  /** 
+   * Relative root value of rem, e.g., '26.6667vw'
+   *
+   * If not provided, the loader will skip variable declaration generation,
+   * but rem values will still be transformed to calc() with CSS variables.
+   * This is useful when developers want to declare the CSS variable manually elsewhere (e.g., in a global stylesheet).
+   */
+  rootval?: string;
 
   /**
    * Scope selector for the CSS variable, default ':root'
