@@ -17,7 +17,13 @@
     "test": "vitest"
   },
   "engines": {},
-  "keywords": [],
+  "keywords": [
+    "css",
+    "rem",
+    "scoped",
+    "transform",
+    "responsive"
+  ],
   "author": "situ2001 <yongcong2001@outlook.com>",
   "license": "MIT",
   "repository": {

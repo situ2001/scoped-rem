@@ -18,11 +18,13 @@
   },
   "keywords": [
     "webpack",
+    "loader",
     "webpack-loader",
     "css",
     "rem",
     "scoped",
-    "transform"
+    "transform",
+    "responsive"
   ],
   "author": "situ2001 <yongcong2001@outlook.com>",
   "license": "MIT",
@@ -36,7 +38,7 @@
   },
   "packageManager": "pnpm@10.16.1",
   "devDependencies": {
-    "@types/webpack": ">=5",
+    "@types/webpack": "^5.0.0",
     "css-loader": "^7.1.2",
     "style-loader": "^4.0.0",
     "webpack": "^5.0.0"

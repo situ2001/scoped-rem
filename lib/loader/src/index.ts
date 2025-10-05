@@ -2,7 +2,9 @@ import { transformCss, parseQueryOptions } from 'scoped-rem';
 import type { LoaderContext } from 'webpack';
 
 const scopedRemLoader = function (
-  this: LoaderContext<{}>,
+  this: LoaderContext<{
+    // TODO add more options if needed
+  }>,
   source: string | Buffer
 ): string | Buffer {
   // Get the resource query (e.g., '?rem-scoped&rootval=26.6667vw')
