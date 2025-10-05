@@ -1,6 +1,6 @@
 # scoped-rem
 
-> "Transform CSS `rem` to scoped values using CSS variables",
+> Transforms CSS `rem` units to be relative to a custom root font size.
 
 For why these packages are created, please refer to the `Why needed` section in [scoped-rem-loader](./lib/loader).
 
