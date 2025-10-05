@@ -14,10 +14,8 @@ test('transformCss basic - simple rem to calc', () => {
     rootval: '26.6667vw',
   });
 
-  // 应该包含变量声明
   expect(result).toContain(':root { --rem-relative-base: 26.6667vw; }');
 
-  // 应该将 rem 转换为 calc
   expect(result).toContain('calc(1.2 * var(--rem-relative-base))');
   expect(result).toContain('calc(2 * var(--rem-relative-base))');
   expect(result).toContain('calc(0.5 * var(--rem-relative-base))');
@@ -37,7 +35,6 @@ test('transformCss with custom varname and varselector', () => {
     varselector: '.my-component',
   });
 
-  // 应该使用自定义变量名和作用域
   expect(result).toContain('.my-component { --my-base: 10vw; }');
   expect(result).toContain('calc(1.5 * var(--my-base))');
 });
@@ -158,6 +155,7 @@ test('nested rem values in functions', () => {
     expect(result).toContain('calc(50% + calc(10px + calc(1 * var(--rem-relative-base))))');
   }
 });
+
 test('transformCss should not transform rem in url()', () => {
   const input = `
 .foo {
@@ -171,10 +169,8 @@ test('transformCss should not transform rem in url()', () => {
     rootval: '26.6667vw',
   });
 
-  // url() 内容中的 rem 不应被转换
   expect(result).toContain('url(114514rem.png)');
   expect(result).toContain('url("images/2rem-icon.svg")');
   expect(result).toContain("url('images/3rem-icon.svg')");
-  // 不应出现 calc 替换在 url() 内
   expect(result).not.toMatch(/url\([^)]+calc\(/);
 });

@@ -33,6 +33,8 @@ export interface ScopedRemOptions {
 
   /**
    * Number of decimal places to round the converted rem values, default is no rounding.
+   * 
+   * Default is 4.
    */
   precision?: number;
 }
@@ -60,14 +62,17 @@ export function parseQueryOptions(query: string): ScopedRemOptions | null {
     options.varselector = varselector;
   }
 
-  const precisionStr = params.get('precision') || "3";
-  options.precision = parseInt(precisionStr, 10);
+  const precisionStr = params.get('precision') || PRECISION_DEFAULT.toString();
+  if (precisionStr) {
+    options.precision = parseInt(precisionStr, 10);
+  }
 
   return options;
 }
 
 export const VARNAME_DEFAULT = '--rem-relative-base';
 export const VARSELECTOR_DEFAULT = ':root';
+export const PRECISION_DEFAULT = 4;
 
 function generateCssVarDeclaration(options: ScopedRemOptions): string {
   const { rootval } = options;
@@ -111,11 +116,20 @@ function transformRemWithPostCSS(
             if (!numStr) {
               return;
             }
-            let numValue = parseFloat(numStr);
 
-            if (options.precision !== undefined) {
-              numValue = parseFloat(numValue.toFixed(options.precision));
-            }
+            const numValue: number = (() => {
+              if (options.precision !== undefined) {
+                if (options.precision < 0 || options.precision > 100) {
+                  throw new Error(
+                    `[scoped-rem-core] Invalid precision value: ${options.precision}. It should be between 0 and 100.`
+                  );
+                }
+
+                return parseFloat(parseFloat(numStr).toFixed(options.precision));
+              } else {
+                return parseFloat(parseFloat(numStr).toFixed(PRECISION_DEFAULT));
+              }
+            })();
 
             if (numValue === 0) {
               node.value = '0';

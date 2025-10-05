@@ -53,7 +53,6 @@ test('malformed - empty rootval', () => {
 }
   `.trim();
 
-  // 空的 rootval 应该抛出错误或使用默认值
   expect(
     transformCss(input, 'test.css', {
       rootval: '',
@@ -70,7 +69,6 @@ test('malformed - empty rootval', () => {
 // }
 //   `.trim();
 
-//   // 缺少 rootval 应该抛出错误
 //   expect(() => {
 //     transformCss(input, 'test.css', {} as any);
 //   }).toThrow();
@@ -83,13 +81,11 @@ test('malformed - empty rootval', () => {
 // }
 //   `.trim();
 
-//   // 无效的 rootval 格式应该抛出错误或警告
 //   const result = transformCss(input, 'test.css', {
 //     rootval: 'invalid-value',
 //   });
 
 
-//   // 应该能够处理或给出合理的输出
 //   expect(result).toBeDefined();
 // });
 
@@ -106,7 +102,6 @@ test('malformed - negative rem values', () => {
   });
 
 
-  // 应该正确处理负数
   expect(result).toContain('calc(-1.5 * var(--rem-relative-base))');
   expect(result).toContain('calc(-2 * var(--rem-relative-base))');
 });
@@ -141,9 +136,7 @@ test('malformed - rem in string values should not be transformed', () => {
   });
 
 
-  // 字符串中的 rem 不应该被转换
   expect(result).toContain('content: "width: 1.2rem"');
-  // 实际 CSS 值应该被转换
   expect(result).toContain('calc(2 * var(--rem-relative-base))');
 });
 
@@ -160,9 +153,7 @@ test('malformed - rem in url should not be transformed', () => {
   });
 
 
-  // URL 中的 rem 不应该被转换
   expect(result).toContain('url("image-1.2rem.png")');
-  // 实际 CSS 值应该被转换
   expect(result).toContain('calc(2 * var(--rem-relative-base))');
 });
 
@@ -178,7 +169,6 @@ test('malformed - mixed units in shorthand', () => {
   });
 
 
-  // 应该只转换 rem，保留其他单位
   expect(result).toContain('calc(1 * var(--rem-relative-base))');
   expect(result).toContain('10px');
   expect(result).toContain('calc(2 * var(--rem-relative-base))');
@@ -198,26 +188,23 @@ test('malformed - rem in calc expression', () => {
   });
 
 
-  // 应该能处理 calc 中的 rem
   expect(result).toContain('var(--rem-relative-base)');
 });
 
-// test('malformed - invalid precision value', () => {
-//   const input = `
-// .foo {
-//   width: 1.23456rem;
-// }
-//   `.trim();
+test('malformed - invalid precision value', () => {
+  const input = `
+.foo {
+  width: 1.23456rem;
+}
+  `.trim();
 
-//   const result = transformCss(input, 'test.css', {
-//     rootval: '16px',
-//     precision: -1, // 无效的精度值
-//   });
-
-
-//   // 应该使用默认精度或忽略无效值
-//   expect(result).toBeDefined();
-// });
+  expect(() => {
+    const result = transformCss(input, 'test.css', {
+      rootval: '16px',
+      precision: -1, // 无效的精度值
+    });
+  }).toThrowError();
+});
 
 test('malformed - empty CSS', () => {
   const input = '';
@@ -226,8 +213,6 @@ test('malformed - empty CSS', () => {
     rootval: '26.6667vw',
   });
 
-
-  // 空 CSS 应该只返回变量声明
   expect(result).toContain(':root { --rem-relative-base: 26.6667vw; }');
 });
 
@@ -238,7 +223,5 @@ test('malformed - only whitespace CSS', () => {
     rootval: '26.6667vw',
   });
 
-
-  // 只有空白的 CSS 应该只返回变量声明
   expect(result).toContain(':root { --rem-relative-base: 26.6667vw; }');
 });
