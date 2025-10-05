@@ -29,7 +29,7 @@ export interface ScopedRemOptions {
    * ```
    * which limits the variable to the specified scope.
    */
-  scope?: string;
+  varselector?: string;
 
   /**
    * Number of decimal places to round the converted rem values, default is no rounding.
@@ -55,9 +55,9 @@ export function parseQueryOptions(query: string): ScopedRemOptions | null {
     options.varname = varname;
   }
 
-  const scope = params.get('scope');
-  if (scope) {
-    options.scope = scope;
+  const varselector = params.get('varselector');
+  if (varselector) {
+    options.varselector = varselector;
   }
 
   const precisionStr = params.get('precision') || "3";
@@ -67,7 +67,7 @@ export function parseQueryOptions(query: string): ScopedRemOptions | null {
 }
 
 export const VARNAME_DEFAULT = '--rem-relative-base';
-export const SCOPE_DEFAULT = ':root';
+export const VARSELECTOR_DEFAULT = ':root';
 
 function generateCssVarDeclaration(options: ScopedRemOptions): string {
   const { rootval } = options;
@@ -78,7 +78,7 @@ function generateCssVarDeclaration(options: ScopedRemOptions): string {
 
   // TODO detect var conflicts?
   const varname = options.varname || VARNAME_DEFAULT;
-  const scope = options.scope || SCOPE_DEFAULT;
+  const scope = options.varselector || VARSELECTOR_DEFAULT;
 
   return `${scope} { ${varname}: ${rootval}; }`;
 }

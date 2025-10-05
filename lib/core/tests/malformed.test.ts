@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { SCOPE_DEFAULT, transformCss } from '../src/index.js';
+import { transformCss } from '../src/index.js';
 
 test('malformed - invalid CSS syntax', () => {
   const input = `

@@ -169,11 +169,11 @@ describe('webpack integration tests', () => {
     }
   });
 
-  it('should support custom variable names and scopes', async () => {
+  it('should support custom variable names and selectors', async () => {
     const inputCss = `.component { font-size: 1.5rem; }`;
     const { jsFile, tempDir } = createTempFiles(
       inputCss,
-      '?rem-scoped&rootval=10vw&varname=--custom-base&scope=.my-component'
+      '?rem-scoped&rootval=10vw&varname=--custom-base&varselector=.my-component'
     );
 
     try {

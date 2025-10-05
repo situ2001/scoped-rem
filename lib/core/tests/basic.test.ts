@@ -24,7 +24,7 @@ test('transformCss basic - simple rem to calc', () => {
   expect(result).toContain('calc(1 * var(--rem-relative-base))');
 });
 
-test('transformCss with custom varname and scope', () => {
+test('transformCss with custom varname and varselector', () => {
   const input = `
 .comp {
   font-size: 1.5rem;
@@ -34,7 +34,7 @@ test('transformCss with custom varname and scope', () => {
   const result = transformCss(input, 'test.css', {
     rootval: '10vw',
     varname: '--my-base',
-    scope: '.my-component',
+    varselector: '.my-component',
   });
 
   // 应该使用自定义变量名和作用域
