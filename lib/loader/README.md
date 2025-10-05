@@ -1,6 +1,6 @@
 # scoped-rem-loader
 
-Webpack loader of scoped-rem, a tool to transform rem length to scoped values using CSS variables.
+Webpack loader of scoped-rem, a tool to transforms CSS `rem` units to be relative to a custom root font size.
 
 ## Why needed
 

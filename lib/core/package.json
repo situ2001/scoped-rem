@@ -1,7 +1,7 @@
 {
   "name": "scoped-rem",
-  "version": "0.1.1",
-  "description": "Transform CSS `rem` to scoped values using CSS variables",
+  "version": "0.1.2",
+  "description": "Transforms CSS `rem` units to be relative to a custom root font size.",
   "type": "module",
   "files": [
     "dist",

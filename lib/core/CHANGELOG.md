@@ -1,5 +1,11 @@
 # scoped-rem
 
+## 0.1.2
+
+### Patch Changes
+
+- Update descriptions.
+
 ## 0.1.1
 
 ### Patch Changes
