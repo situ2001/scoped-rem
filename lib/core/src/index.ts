@@ -1,9 +1,6 @@
 import postcss from 'postcss';
 import valueParser from 'postcss-value-parser';
 
-/**
- * 解析选项参数
- */
 export interface ScopedRemOptions {
   /** 
    * Relative root value of rem, e.g., '26.6667vw'
@@ -11,25 +8,67 @@ export interface ScopedRemOptions {
    * If not provided, the loader will skip rem value transformation, leaving rem units as-is.
    */
   rootval?: string;
-  /** CSS 变量名，默认 '--rem-relative-base' */
+
+  /** 
+   * CSS variable name used for rem conversion, default '--rem-relative-base' 
+   * 
+   * e.g., '--my-base', then rem will be converted to 'calc(x * var(--my-base))'
+   */
   varname?: string;
-  /** CSS 变量的作用域选择器，默认 ':root' */
+
+  /**
+   * Scope selector for the CSS variable, default ':root'
+   * 
+   * e.g., '.my-component' will generate:
+   * ```
+   * .my-component { --rem-relative-base: 26.6667vw; }
+   * ```
+   * instead of
+   * ```
+   * :root { --rem-relative-base: 26.6667vw; }
+   * ```
+   * which limits the variable to the specified scope.
+   */
   scope?: string;
-  /** 小数精度，默认保持原值 */
+
+  /**
+   * Number of decimal places to round the converted rem values, default is no rounding.
+   */
   precision?: number;
+}
+
+export function parseQueryOptions(query: string): ScopedRemOptions | null {
+  const params = new URLSearchParams(query);
+  if (!params.has('rem-scoped')) {
+    return null;
+  }
+
+  const options: ScopedRemOptions = {};
+
+  const rootvalValue = params.get('rootval');
+  if (rootvalValue) {
+    options.rootval = rootvalValue;
+  }
+
+  const varname = params.get('varname');
+  if (varname) {
+    options.varname = varname;
+  }
+
+  const scope = params.get('scope');
+  if (scope) {
+    options.scope = scope;
+  }
+
+  const precisionStr = params.get('precision') || "3";
+  options.precision = parseInt(precisionStr, 10);
+
+  return options;
 }
 
 export const VARNAME_DEFAULT = '--rem-relative-base';
 export const SCOPE_DEFAULT = ':root';
 
-/**
- * 生成 CSS 变量声明
- * @param options 配置选项
- * @returns CSS 变量声明字符串
- * @example
- * generateCssVarDeclaration({ rootval: '26.6667vw' })
- * // => ':root { --rem-relative-base: 26.6667vw; }'
- */
 function generateCssVarDeclaration(options: ScopedRemOptions): string {
   const { rootval } = options;
 
@@ -37,6 +76,7 @@ function generateCssVarDeclaration(options: ScopedRemOptions): string {
     return '';
   }
 
+  // TODO detect var conflicts?
   const varname = options.varname || VARNAME_DEFAULT;
   const scope = options.scope || SCOPE_DEFAULT;
 
@@ -47,11 +87,9 @@ function generateCssVarDeclaration(options: ScopedRemOptions): string {
 const remRegex = /"[^"]+"|'[^']+'|url\([^)]+\)|--[\w-]+|(-?\d*\.?\d+)rem/gi;
 
 /**
- * 使用 PostCSS 转换 CSS 中的 rem 单位
- * @param css 原始 CSS 代码
- * @param filename 文件名（用于 source map）
- * @param options 配置选项
- * @returns 转换后的 CSS 代码
+ * @param css CSS source code
+ * @param filename will be passed to PostCSS
+ * @returns The transformed CSS
  */
 function transformRemWithPostCSS(
   css: string,
@@ -69,14 +107,12 @@ function transformRemWithPostCSS(
         let modified = false;
         parsed.walk((node) => {
           if (node.type === 'word' && node.value.endsWith('rem')) {
-            // TODO feel not so robust, need more tests...
             const numStr = node.value.match(remRegex)?.[0];
             if (!numStr) {
               return;
             }
             let numValue = parseFloat(numStr);
 
-            // 应用精度处理
             if (options.precision !== undefined) {
               numValue = parseFloat(numValue.toFixed(options.precision));
             }
@@ -112,35 +148,4 @@ export function transformCss(
 
   if (!varDeclaration) return transformedCss;
   return `${varDeclaration}\n${transformedCss}`;
-}
-
-export function parseQueryOptions(query: string): ScopedRemOptions | null {
-  const params = new URLSearchParams(query);
-  if (!params.has('rem-scoped')) {
-    return null;
-  }
-
-  const options: ScopedRemOptions = {};
-
-  const rootvalValue = params.get('rootval');
-  if (rootvalValue) {
-    options.rootval = rootvalValue;
-  }
-
-  const varname = params.get('varname');
-  if (varname) {
-    options.varname = varname;
-  }
-
-  const scope = params.get('scope');
-  if (scope) {
-    options.scope = scope;
-  }
-
-  const precisionStr = params.get('precision');
-  if (precisionStr) {
-    options.precision = parseInt(precisionStr, 10);
-  }
-
-  return options;
 }
