@@ -35,7 +35,7 @@ importers:
 
   lib/loader:
     dependencies:
-      scoped-rem-core:
+      scoped-rem:
         specifier: workspace:*
         version: link:../core
     devDependencies:

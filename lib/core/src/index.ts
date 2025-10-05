@@ -119,7 +119,7 @@ function transformRemWithPostCSS(
               if (options.precision !== undefined) {
                 if (options.precision < 0 || options.precision > 100) {
                   throw new Error(
-                    `[scoped-rem-core] Invalid precision value: ${options.precision}. It should be between 0 and 100.`
+                    `[scoped-rem] Invalid precision value: ${options.precision}. It should be between 0 and 100.`
                   );
                 }
 

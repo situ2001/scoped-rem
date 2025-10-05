@@ -42,7 +42,7 @@
     "webpack": "^5.0.0"
   },
   "dependencies": {
-    "scoped-rem-core": "workspace:*"
+    "scoped-rem": "workspace:*"
   },
   "peerDependencies": {
     "webpack": "^5.0.0"

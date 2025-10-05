@@ -1,4 +1,4 @@
-import { transformCss, parseQueryOptions } from 'scoped-rem-core';
+import { transformCss, parseQueryOptions } from 'scoped-rem';
 import type { LoaderContext } from 'webpack';
 
 const scopedRemLoader = function (
