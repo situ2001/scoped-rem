@@ -37,7 +37,8 @@
   "packageManager": "pnpm@10.16.1",
   "dependencies": {
     "postcss": "^8.5.6",
-    "postcss-value-parser": "^4.2.0"
+    "postcss-value-parser": "^4.2.0",
+    "zod": "^4.1.11"
   },
   "publishConfig": {
     "access": "public",

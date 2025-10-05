@@ -1,5 +1,6 @@
 import postcss from 'postcss';
 import valueParser from 'postcss-value-parser';
+import { z } from 'zod';
 
 /**
  * Core idea of scoped-rem:
@@ -47,36 +48,37 @@ export interface ScopedRemOptions {
   precision?: number;
 }
 
-// TODO refactor using zod.
+const ScopedRemOptionsSchema: z.ZodType<ScopedRemOptions> = z.object({
+  varname: z.string().optional(),
+  rootval: z.string().optional(),
+  varselector: z.string().optional(),
+  precision: z.coerce.number().int().min(0).max(100).optional(),
+});
+
 export function parseQueryOptions(query: string): ScopedRemOptions | null {
   const params = new URLSearchParams(query);
   if (!params.has('rem-scoped')) {
     return null;
   }
 
-  const options: ScopedRemOptions = {};
+  const rawOptions: Record<string, string | undefined> = {
+    varname: params.get('varname') || undefined,
+    rootval: params.get('rootval') || undefined,
+    varselector: params.get('varselector') || undefined,
+    precision: params.get('precision') || undefined,
+  };
 
-  const rootvalValue = params.get('rootval');
-  if (rootvalValue) {
-    options.rootval = rootvalValue;
+  try {
+    const options = ScopedRemOptionsSchema.parse(rawOptions);
+    return options as ScopedRemOptions;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        `[scoped-rem] Invalid query options: ${error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ')}`
+      );
+    }
+    throw error;
   }
-
-  const varname = params.get('varname');
-  if (varname) {
-    options.varname = varname;
-  }
-
-  const varselector = params.get('varselector');
-  if (varselector) {
-    options.varselector = varselector;
-  }
-
-  const precisionStr = params.get('precision');
-  if (precisionStr) {
-    options.precision = parseInt(precisionStr, 10);
-  }
-
-  return options;
 }
 
 export const VARNAME_DEFAULT = '--rem-relative-base';
