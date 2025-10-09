@@ -1,23 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import { webpack, type Stats } from 'webpack';
+import { build as tsdownBuild } from 'tsdown';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 
-// TODO it is better to have api that is equivalent to `tsdown -c tsdown.config.js`
-import { } from 'tsdown';
-import { execSync } from 'node:child_process';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-function runWebpack(
+async function runWebpack(
   entry: string,
   loaderPath: string
 ): Promise<{ output: string; stats: Stats }> {
-  // run `tsdown -c tsdown.config.js` to compile the loader before testing
-  execSync('tsdown -c tsdown.config.js', { stdio: 'ignore' });
+  await tsdownBuild({
+    logLevel: 'error',
+  });
   // replace /src with /dist in loaderPath
   loaderPath = loaderPath.replace('/src/', '/dist/');
   // replace .ts with .js in loaderPath
