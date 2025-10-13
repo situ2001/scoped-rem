@@ -1,5 +1,13 @@
 # scoped-rem-loader
 
+## 0.1.4
+
+### Patch Changes
+
+- Update description.
+- Updated dependencies
+  - scoped-rem@0.1.3
+
 ## 0.1.3
 
 ### Patch Changes
