@@ -1,7 +1,7 @@
 {
   "name": "scoped-rem-loader",
   "version": "0.1.3",
-  "description": "Webpack loader of scoped-rem, a tool that transforms CSS `rem` units to be relative to a custom root font size.",
+  "description": "Webpack loader of scoped-rem, a tool that makes CSS rem units relative to a custom root font size.",
   "type": "module",
   "files": [
     "dist",

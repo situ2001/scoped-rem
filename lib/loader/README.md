@@ -1,6 +1,6 @@
 # scoped-rem-loader
 
-Webpack loader of scoped-rem, a tool that transforms CSS `rem` units to be relative to a custom root font size.
+Webpack loader of scoped-rem, a tool that makes CSS rem units relative to a custom root font size.
 
 ## Why needed
 
