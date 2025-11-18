@@ -1,5 +1,16 @@
 # scoped-rem-loader
 
+## 0.2.0
+
+### Minor Changes
+
+- 3a45716: Support cjs format dist
+
+### Patch Changes
+
+- Updated dependencies [3a45716]
+  - scoped-rem@0.2.0
+
 ## 0.1.4
 
 ### Patch Changes

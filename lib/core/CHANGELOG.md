@@ -1,5 +1,11 @@
 # scoped-rem
 
+## 0.2.0
+
+### Minor Changes
+
+- 3a45716: Support cjs format dist
+
 ## 0.1.3
 
 ### Patch Changes
