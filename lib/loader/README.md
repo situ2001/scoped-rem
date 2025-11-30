@@ -1,5 +1,10 @@
 # scoped-rem-loader
 
+[![GitHub Repo](https://img.shields.io/badge/GitHub-repo-080f12?style=flat&logo=github&logoColor=white)](https://github.com/situ2001/scoped-rem-loader)
+[![npm version](https://img.shields.io/npm/v/scoped-rem-loader?style=flat&colorA=080f12&colorB=1fa669)](https://www.npmjs.com/package/scoped-rem-loader)
+[![npm download](https://img.shields.io/npm/dt/scoped-rem-loader?style=flat&colorA=080f12&colorB=1fa669)](https://www.npmjs.com/package/scoped-rem-loader)
+![npm license](https://img.shields.io/npm/l/scoped-rem-loader?style=flat&colorA=080f12&colorB=1fa669)
+
 Webpack loader of scoped-rem, a tool that makes CSS rem units relative to a custom root font size.
 
 ## Why needed
